@@ -3,6 +3,7 @@ from typing import Iterable, Iterator
 import numpy as np
 import ctypes
 import pandas as pd
+from os import path
 
 # C struct binding representing a loaded data point from a thermite log
 class _datapoint_t(ctypes.Structure):
@@ -16,9 +17,9 @@ class _header_t(ctypes.Structure):
 
 # Load thermite dynamic lib
 if platform == "win32":
-    _libthermite = ctypes.cdll.LoadLibrary("./thermite.dll")
+    _libthermite = ctypes.cdll.LoadLibrary(path.join(path.dirname(__file__), "thermite.dll"))
 elif platform == "darwin":
-    _libthermite = ctypes.cdll.LoadLibrary("./libthermite.dylib")
+    _libthermite = ctypes.cdll.LoadLibrary(path.join(path.dirname(__file__), "libthermite.dylib"))
 
 
 class Thermite:

@@ -6,9 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "thermite"
 version = "0.0.1"
 authors = [
-  { name="Example Author", email="author@example.com" },
+  { name="Sherif Abdou", email="sherif_abdou@outlook.com" },
 ]
-description = "A small example package"
+description = "Thermite bindings for python"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -22,10 +22,6 @@ license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
 [tool.setuptools.package-data]
-myModule = ["*.dll", "*.dylib"]
+thermite = ["*.dll", "*.dylib"]
 
-
-[project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
 
