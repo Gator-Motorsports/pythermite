@@ -1,1 +1,1 @@
-from thermite import *
+from .thermite import Thermite
