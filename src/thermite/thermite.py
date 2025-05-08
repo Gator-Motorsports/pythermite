@@ -1,5 +1,5 @@
 from sys import platform
-from typing import Iterable, Iterator
+from typing import Iterable, Iterator, List
 import numpy as np
 import ctypes
 import pandas as pd
@@ -31,7 +31,7 @@ class Thermite:
         """
         self.__path = path
         self.__headers = []
-        self.__data = {}
+        self.__data = dict()
         self.__load_headers()
 
     def __cstr_path(self):
@@ -74,11 +74,21 @@ class Thermite:
         self.__data[name] = python_result
         return python_result
 
-    def load_df(self, names: Iterable[str]) -> pd.DataFrame:
+    def signals(self) -> List[str]:
+        """Returns a list containing every signal name present in the thermite file"""
+        return self.__headers
+
+    def clear_cache(self):
+        """When data is loaded from a thermite file, it gets cached so it can be quickly retrieved again. If you're loading a ton of thermite data however, this cache may become exceedingly large. If memory usage becomes a problem, clearing this cache may help significantly"""
+        self.__data = dict()
+
+    def load_df(self, names: Iterable[str], ffill=False, relative_timestamp=True) -> pd.DataFrame:
         """Load a Pandas DataFrame from Thermite. The index of the Dataframe is the time in seconds since the start of the first signal in the Dataframe
         Parameters
         ----------
         ``names``: An iterable list of thermite signal names to pull
+        ``ffill``: Fill empty cells with previous value. By default this is disabled.
+        ``relative_timestamp``: Converts timestamps into seconds since the timestamp of the earliest data point in the table. Disabling this will represent timestamps as seconds since unix epoch (Jan 1, 1970). By default, this is enabled
 
         Returns
         -------
@@ -96,8 +106,10 @@ class Thermite:
 
         if df.empty:
             return df
-        df.set_index(df.index - df.first_valid_index(), inplace=True)
-        df.ffill(inplace=True)
+        if relative_timestamp:
+            df.set_index(df.index - df.first_valid_index(), inplace=True)
+        if ffill:
+            df.ffill(inplace=True)
         return df
 
     def __contains__(self, name: str):
