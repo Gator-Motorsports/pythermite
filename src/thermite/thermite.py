@@ -39,10 +39,14 @@ class Thermite:
 
     def __load_headers(self):
         header_count = _libthermite.thermite_header_count(self.__cstr_path())
+        if header_count < 0:
+            raise Exception(f"Error when loading thermite file. Error code {header_count}")
         print(header_count)
 
         header_buf = (_header_t * header_count)()
-        _libthermite.thermite_headers(self.__cstr_path(), ctypes.byref(header_buf), header_count)
+        err = _libthermite.thermite_headers(self.__cstr_path(), ctypes.byref(header_buf), header_count)
+        if err < 0:
+            raise Exception(f"Error when loading thermite file. Error code {header_count}")
         for header in header_buf:
             self.__headers.append(header.name.decode("utf-8"))
 
@@ -62,9 +66,14 @@ class Thermite:
             return self.__data[name]
         bname = name.encode("utf-8")
         data_count = _libthermite.thermite_data_count(self.__cstr_path(), bname)
+        if data_count < 0:
+            raise Exception(f"Error when loading signal {name} from thermite file. Error code {data_count}")
 
         data_buf = (_datapoint_t * data_count)()
-        _libthermite.thermite_data(self.__cstr_path(), bname, ctypes.byref(data_buf), data_count)
+        err = _libthermite.thermite_data(self.__cstr_path(), bname, ctypes.byref(data_buf), data_count)
+        if err < 0:
+            raise Exception(f"Error when loading signal {name} from thermite file. Error code {err}")
+
         python_result = []
         for datapoint in data_buf:
             python_result.append((datapoint.timestamp, datapoint.value))
