@@ -20,6 +20,8 @@ if platform == "win32":
     _libthermite = ctypes.cdll.LoadLibrary(path.join(path.dirname(__file__), "thermite.dll"))
 elif platform == "darwin":
     _libthermite = ctypes.cdll.LoadLibrary(path.join(path.dirname(__file__), "libthermite.dylib"))
+elif platform == "linux":
+    _libthermite = ctypes.cdll.LoadLibrary(path.join(path.dirname(__file__), "libthermite.so"))
 
 
 class Thermite:

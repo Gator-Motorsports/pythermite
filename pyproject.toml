@@ -22,6 +22,6 @@ license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
 [tool.setuptools.package-data]
-thermite = ["*.dll", "*.dylib"]
+thermite = ["*.dll", "*.dylib", "*.so"]
 
 
